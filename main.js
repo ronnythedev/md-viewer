@@ -19,8 +19,8 @@ app.whenReady().then(() => {
     frame: true,
     // Exclude from screen capture/sharing
     skipTaskbar: true, // Hide from taskbar/dock
-    // Make window click-through initially
-    focusable: false,
+    // Window can receive focus for input elements
+    focusable: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
