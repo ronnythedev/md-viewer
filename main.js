@@ -87,7 +87,7 @@ function registerMovementShortcuts() {
     }
   });
 
-  // Increase opacity (Cmd + Fn + Right)
+  // Increase opacity (Cmd + Option + Right)
   globalShortcut.register("CommandOrControl+Option+Right", () => {
     if (mainWindow) {
       const currentOpacity = mainWindow.getOpacity();
@@ -99,15 +99,23 @@ function registerMovementShortcuts() {
     }
   });
 
-  // Decrease opacity (Cmd + Fn + Left)
+  // Decrease opacity (Cmd + Option + Left)
   globalShortcut.register("CommandOrControl+Option+Left", () => {
     if (mainWindow) {
       const currentOpacity = mainWindow.getOpacity();
-      const newOpacity = Math.max(0.1, currentOpacity - opacityStep);
+      const newOpacity = Math.max(0.0, currentOpacity - opacityStep);
       mainWindow.setOpacity(newOpacity);
 
       // Update the slider in the UI
       mainWindow.webContents.send("opacity-changed", newOpacity);
+    }
+  });
+
+  // Toggle theme (Cmd + .)
+  globalShortcut.register("CommandOrControl+.", () => {
+    if (mainWindow) {
+      // Send message to renderer to toggle theme
+      mainWindow.webContents.send("toggle-theme");
     }
   });
 }

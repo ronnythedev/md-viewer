@@ -61,6 +61,11 @@ document.addEventListener("DOMContentLoaded", () => {
   window.api.onOpacityChanged((newOpacity) => {
     opacitySlider.value = newOpacity;
   });
+
+  // Listen for theme toggle from main process (keyboard shortcuts)
+  window.api.onToggleTheme(() => {
+    toggleTheme();
+  });
 });
 
 // Function to apply zoom
@@ -90,8 +95,8 @@ resetZoomButton.addEventListener("click", () => {
   applyZoom();
 });
 
-// Function to switch themes
-toggleThemeButton.addEventListener("click", () => {
+// Function to switch themes (shared by button and keyboard shortcut)
+function toggleTheme() {
   const themeLink = document.querySelector('link[rel="stylesheet"]');
 
   if (isDarkTheme) {
@@ -103,7 +108,10 @@ toggleThemeButton.addEventListener("click", () => {
     toggleThemeButton.textContent = "🌙";
     isDarkTheme = true;
   }
-});
+}
+
+// Function to switch themes
+toggleThemeButton.addEventListener("click", toggleTheme);
 
 // Handle close application
 closeAppButton.addEventListener("click", () => {

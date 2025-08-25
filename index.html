@@ -84,6 +84,7 @@
       font-size: 16px;
       /* Make content area click-through */
       pointer-events: none;
+      margin-top: 20px;
     }
 
     #content pre {
@@ -104,7 +105,7 @@
       position: fixed;
       top: 10px;
       right: 10px;
-      margin-bottom: 5px;
+      margin-bottom: 10px;
       display: flex;
       align-items: center;
       /* Make this area always clickable */
@@ -116,6 +117,10 @@
     }
 
     #openFolder {
+      margin-bottom: 5px;
+    }
+
+    #toggleTheme {
       margin-bottom: 5px;
     }
 
@@ -139,6 +144,16 @@
       align-self: center;
       line-height: 1.2;
     }
+    #moveInstructions2 {
+      font-size: 10px;
+      color: #666;
+      margin-right: 10px;
+      white-space: nowrap;
+      align-self: center;
+      line-height: 1.2;
+      border-left: #666 solid 1px;
+      padding-left: 2px;
+    }
 
     #closeApp:hover {
       background: #c0392b;
@@ -153,9 +168,9 @@
       <ul id="fileListContent"></ul>
     </div>
   </div>
-  <div id="content"></div>
   <div id="controls">
-    <span id="moveInstructions">Move: ⌘ ←↕→ | Opacity: ⌘fn ←→</span>
+    <span id="moveInstructions">Move: ⌘ ←↕→ <br/> Opacity: ⌘ Opt ←→ <br/> Theme ⌘ .</span>
+    <span id="moveInstructions2">Click through: ⌘ , <br/> Zoom: ⌘ Opt ↕ </span>
     <button id="openFolder">Open Folder</button>
     <button id="toggleTheme" title="Switch Theme">☀️</button>
     <input type="range" id="opacitySlider" min="0.01" max="1" step="0.1" value="0.5">
@@ -164,6 +179,7 @@
     <button id="resetZoom" title="Reset Zoom">Reset</button>
     <button id="closeApp" title="Close Application">✕</button>
   </div>
+  <div id="content"></div>
   <script src="renderer.js"></script>
 </body>
 </html>
