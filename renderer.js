@@ -8,6 +8,7 @@ const toggleThemeButton = document.getElementById("toggleTheme");
 const zoomInButton = document.getElementById("zoomIn");
 const zoomOutButton = document.getElementById("zoomOut");
 const resetZoomButton = document.getElementById("resetZoom");
+const closeAppButton = document.getElementById("closeApp");
 
 let zoomLevel = 1;
 let isDarkTheme = true;
@@ -55,6 +56,11 @@ toggleThemeButton.addEventListener("click", () => {
     toggleThemeButton.textContent = "🌙";
     isDarkTheme = true;
   }
+});
+
+// Handle close application
+closeAppButton.addEventListener("click", () => {
+  window.api.closeApp();
 });
 
 // Handle collapse/expand

@@ -29,4 +29,5 @@ contextBridge.exposeInMainWorld("api", {
   readFiles: (folderPath) => ipcRenderer.invoke("read-files", folderPath),
   readFile: (filePath) => ipcRenderer.invoke("read-file", filePath),
   setOpacity: (opacity) => ipcRenderer.send("set-opacity", opacity),
+  closeApp: () => ipcRenderer.send("close-app"),
 });

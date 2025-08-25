@@ -6,8 +6,8 @@ let mainWindow;
 
 app.whenReady().then(() => {
   mainWindow = new BrowserWindow({
-    width: 600,
-    height: 1600,
+    width: 900,
+    height: 900,
     opacity: 1,
     alwaysOnTop: true,
     frame: true,
@@ -58,4 +58,9 @@ ipcMain.handle("read-file", (event, filePath) => {
 // Handle opacity change
 ipcMain.on("set-opacity", (event, opacity) => {
   mainWindow.setOpacity(opacity);
+});
+
+// Handle close app request
+ipcMain.on("close-app", () => {
+  app.quit();
 });
