@@ -15,6 +15,7 @@ let isDarkTheme = true;
 let isCollapsed = false;
 let currentFolderPath = "";
 let allFiles = [];
+let isClickThroughEnabled = true; // Track click-through state
 
 // Set up click-through behavior
 document.addEventListener("DOMContentLoaded", () => {
@@ -24,8 +25,22 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("fileListContainer"),
   ];
 
+  // Function to update click-through behavior
+  function updateClickThrough() {
+    if (!isClickThroughEnabled) {
+      // When click-through is disabled, always allow mouse events
+      window.api.setIgnoreMouseEvents(false);
+      return;
+    }
+
+    // Original click-through logic when enabled
+    document.addEventListener("mousemove", handleMouseMove);
+  }
+
   // Track mouse position and determine if it's over an interactive area
-  document.addEventListener("mousemove", (e) => {
+  function handleMouseMove(e) {
+    if (!isClickThroughEnabled) return;
+
     let isOverInteractive = false;
 
     // Check if mouse is over the title bar area (top 30px of window)
@@ -43,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Enable mouse events when over interactive areas, disable otherwise
     window.api.setIgnoreMouseEvents(!isOverInteractive, { forward: true });
-  });
+  }
 
   // Helper function to check if mouse is over an element
   function isElementUnderMouse(element, mouseX, mouseY) {
@@ -57,6 +72,9 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
+  // Initialize click-through behavior
+  updateClickThrough();
+
   // Listen for opacity changes from main process (keyboard shortcuts)
   window.api.onOpacityChanged((newOpacity) => {
     opacitySlider.value = newOpacity;
@@ -66,7 +84,69 @@ document.addEventListener("DOMContentLoaded", () => {
   window.api.onToggleTheme(() => {
     toggleTheme();
   });
+
+  // Listen for click-through toggle from main process
+  window.api.onToggleClickThrough(() => {
+    toggleClickThrough();
+  });
+
+  // Listen for zoom shortcuts from main process
+  window.api.onZoomIn(() => {
+    zoomIn();
+  });
+
+  window.api.onZoomOut(() => {
+    zoomOut();
+  });
 });
+
+// Function to toggle click-through functionality
+function toggleClickThrough() {
+  isClickThroughEnabled = !isClickThroughEnabled;
+
+  if (isClickThroughEnabled) {
+    // Re-enable the original mousemove listener for dynamic click-through
+    document.addEventListener("mousemove", (e) => {
+      let isOverInteractive = false;
+
+      // Check if mouse is over the title bar area (top 30px of window)
+      if (e.clientY <= 30) {
+        isOverInteractive = true;
+      } else {
+        // Check other interactive areas
+        const interactiveAreas = [
+          document.getElementById("controls"),
+          document.getElementById("fileListContainer"),
+        ];
+
+        for (const area of interactiveAreas) {
+          if (area && isElementUnderMouse(area, e.clientX, e.clientY)) {
+            isOverInteractive = true;
+            break;
+          }
+        }
+      }
+
+      // Enable mouse events when over interactive areas, disable otherwise
+      window.api.setIgnoreMouseEvents(!isOverInteractive, { forward: true });
+    });
+  } else {
+    // Disable click-through completely - always allow mouse events
+    window.api.setClickThrough(false);
+  }
+
+  // Helper function for the new listener
+  function isElementUnderMouse(element, mouseX, mouseY) {
+    if (!element) return false;
+    const rect = element.getBoundingClientRect();
+    return (
+      mouseX >= rect.left &&
+      mouseX <= rect.right &&
+      mouseY >= rect.top &&
+      mouseY <= rect.bottom
+    );
+  }
+}
 
 // Function to apply zoom
 function applyZoom() {
@@ -74,20 +154,25 @@ function applyZoom() {
   contentDiv.style.fontSize = fontSize; // Dynamically adjust font size
 }
 
-// Zoom in
-zoomInButton.addEventListener("click", () => {
+// NEW FEATURE 2: Zoom functions that can be called from shortcuts
+function zoomIn() {
   zoomLevel += 0.1; // Increment zoom level
   applyZoom();
-});
+}
 
-// Zoom out
-zoomOutButton.addEventListener("click", () => {
+function zoomOut() {
   if (zoomLevel > 0.5) {
     // Prevent zooming out too far
     zoomLevel -= 0.1; // Decrement zoom level
     applyZoom();
   }
-});
+}
+
+// Zoom in button
+zoomInButton.addEventListener("click", zoomIn);
+
+// Zoom out button
+zoomOutButton.addEventListener("click", zoomOut);
 
 // Reset zoom
 resetZoomButton.addEventListener("click", () => {

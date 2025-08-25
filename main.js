@@ -118,6 +118,30 @@ function registerMovementShortcuts() {
       mainWindow.webContents.send("toggle-theme");
     }
   });
+
+  // Toggle click-through functionality (Cmd + ,)
+  globalShortcut.register("CommandOrControl+,", () => {
+    if (mainWindow) {
+      // Send message to renderer to toggle click-through
+      mainWindow.webContents.send("toggle-click-through");
+    }
+  });
+
+  // Zoom in (Cmd + Option + Up)
+  globalShortcut.register("CommandOrControl+Option+Up", () => {
+    if (mainWindow) {
+      // Send message to renderer to zoom in
+      mainWindow.webContents.send("zoom-in");
+    }
+  });
+
+  // Zoom out (Cmd + Option + Down)
+  globalShortcut.register("CommandOrControl+Option+Down", () => {
+    if (mainWindow) {
+      // Send message to renderer to zoom out
+      mainWindow.webContents.send("zoom-out");
+    }
+  });
 }
 
 app.on("will-quit", () => {
@@ -157,4 +181,11 @@ ipcMain.on("close-app", () => {
 ipcMain.on("set-ignore-mouse-events", (event, ignore, options) => {
   const { forward } = options || {};
   mainWindow.setIgnoreMouseEvents(ignore, { forward });
+});
+
+// Handle click-through toggle from renderer
+ipcMain.on("set-click-through", (event, isClickThrough) => {
+  if (mainWindow) {
+    mainWindow.setIgnoreMouseEvents(isClickThrough, { forward: true });
+  }
 });

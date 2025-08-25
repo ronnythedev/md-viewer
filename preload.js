@@ -35,4 +35,10 @@ contextBridge.exposeInMainWorld("api", {
   onOpacityChanged: (callback) =>
     ipcRenderer.on("opacity-changed", (event, opacity) => callback(opacity)),
   onToggleTheme: (callback) => ipcRenderer.on("toggle-theme", callback),
+  setClickThrough: (isClickThrough) =>
+    ipcRenderer.send("set-click-through", isClickThrough),
+  onToggleClickThrough: (callback) =>
+    ipcRenderer.on("toggle-click-through", callback),
+  onZoomIn: (callback) => ipcRenderer.on("zoom-in", callback),
+  onZoomOut: (callback) => ipcRenderer.on("zoom-out", callback),
 });
