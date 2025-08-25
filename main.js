@@ -11,6 +11,8 @@ app.whenReady().then(() => {
     opacity: 1,
     alwaysOnTop: true,
     frame: true,
+    // Exclude from screen capture/sharing
+    skipTaskbar: false, // Keep in taskbar
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
@@ -19,8 +21,19 @@ app.whenReady().then(() => {
     },
   });
 
+  // Set the window to be excluded from screen capture
+  // This works on macOS, Windows, and Linux
+  mainWindow.setContentProtection(true);
+
+  // Alternative method for older Electron versions or additional protection
+  if (process.platform === "darwin") {
+    // macOS specific: Set window level to make it invisible to screen sharing
+    mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
+  }
+
   mainWindow.loadFile("index.html");
 
+  // Uncomment for development
   //mainWindow.webContents.openDevTools();
 });
 
