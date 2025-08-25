@@ -16,6 +16,41 @@ let isCollapsed = false;
 let currentFolderPath = "";
 let allFiles = [];
 
+// Set up click-through behavior
+document.addEventListener("DOMContentLoaded", () => {
+  // Define interactive areas (areas that should capture mouse events)
+  const interactiveAreas = [
+    document.getElementById("controls"),
+    document.getElementById("fileListContainer"),
+  ];
+
+  // Track mouse position and determine if it's over an interactive area
+  document.addEventListener("mousemove", (e) => {
+    let isOverInteractive = false;
+
+    for (const area of interactiveAreas) {
+      if (area && isElementUnderMouse(area, e.clientX, e.clientY)) {
+        isOverInteractive = true;
+        break;
+      }
+    }
+
+    // Enable mouse events when over interactive areas, disable otherwise
+    window.api.setIgnoreMouseEvents(!isOverInteractive, { forward: true });
+  });
+
+  // Helper function to check if mouse is over an element
+  function isElementUnderMouse(element, mouseX, mouseY) {
+    const rect = element.getBoundingClientRect();
+    return (
+      mouseX >= rect.left &&
+      mouseX <= rect.right &&
+      mouseY >= rect.top &&
+      mouseY <= rect.bottom
+    );
+  }
+});
+
 // Function to apply zoom
 function applyZoom() {
   const fontSize = `${zoomLevel * 16}px`; // Base font size is 16px

@@ -30,4 +30,6 @@ contextBridge.exposeInMainWorld("api", {
   readFile: (filePath) => ipcRenderer.invoke("read-file", filePath),
   setOpacity: (opacity) => ipcRenderer.send("set-opacity", opacity),
   closeApp: () => ipcRenderer.send("close-app"),
+  setIgnoreMouseEvents: (ignore, options) =>
+    ipcRenderer.send("set-ignore-mouse-events", ignore, options),
 });

@@ -13,6 +13,8 @@ app.whenReady().then(() => {
     frame: true,
     // Exclude from screen capture/sharing
     skipTaskbar: true, // Hide from taskbar/dock
+    // Make window click-through initially
+    focusable: false,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
@@ -24,6 +26,9 @@ app.whenReady().then(() => {
   // Set the window to be excluded from screen capture
   // This works on macOS, Windows, and Linux
   mainWindow.setContentProtection(true);
+
+  // Make the window ignore mouse events (click-through)
+  mainWindow.setIgnoreMouseEvents(true);
 
   // Alternative method for older Electron versions or additional protection
   if (process.platform === "darwin") {
@@ -63,4 +68,10 @@ ipcMain.on("set-opacity", (event, opacity) => {
 // Handle close app request
 ipcMain.on("close-app", () => {
   app.quit();
+});
+
+// Handle mouse events for specific UI areas
+ipcMain.on("set-ignore-mouse-events", (event, ignore, options) => {
+  const { forward } = options || {};
+  mainWindow.setIgnoreMouseEvents(ignore, { forward });
 });
