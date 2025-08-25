@@ -1,4 +1,10 @@
-const { app, BrowserWindow, ipcMain, dialog } = require("electron");
+const {
+  app,
+  BrowserWindow,
+  ipcMain,
+  dialog,
+  globalShortcut,
+} = require("electron");
 const path = require("path");
 const fs = require("fs");
 
@@ -38,8 +44,52 @@ app.whenReady().then(() => {
 
   mainWindow.loadFile("index.html");
 
+  // Register global shortcuts for moving the window
+  registerMovementShortcuts();
+
   // Uncomment for development
   //mainWindow.webContents.openDevTools();
+});
+
+function registerMovementShortcuts() {
+  const moveDistance = 50; // pixels to move each time
+
+  // Move left
+  globalShortcut.register("CommandOrControl+Left", () => {
+    if (mainWindow) {
+      const [x, y] = mainWindow.getPosition();
+      mainWindow.setPosition(x - moveDistance, y);
+    }
+  });
+
+  // Move right
+  globalShortcut.register("CommandOrControl+Right", () => {
+    if (mainWindow) {
+      const [x, y] = mainWindow.getPosition();
+      mainWindow.setPosition(x + moveDistance, y);
+    }
+  });
+
+  // Move up
+  globalShortcut.register("CommandOrControl+Up", () => {
+    if (mainWindow) {
+      const [x, y] = mainWindow.getPosition();
+      mainWindow.setPosition(x, y - moveDistance);
+    }
+  });
+
+  // Move down
+  globalShortcut.register("CommandOrControl+Down", () => {
+    if (mainWindow) {
+      const [x, y] = mainWindow.getPosition();
+      mainWindow.setPosition(x, y + moveDistance);
+    }
+  });
+}
+
+app.on("will-quit", () => {
+  // Unregister all shortcuts when app is about to quit
+  globalShortcut.unregisterAll();
 });
 
 // Handle folder selection

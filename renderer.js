@@ -28,10 +28,16 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("mousemove", (e) => {
     let isOverInteractive = false;
 
-    for (const area of interactiveAreas) {
-      if (area && isElementUnderMouse(area, e.clientX, e.clientY)) {
-        isOverInteractive = true;
-        break;
+    // Check if mouse is over the title bar area (top 30px of window)
+    if (e.clientY <= 30) {
+      isOverInteractive = true;
+    } else {
+      // Check other interactive areas
+      for (const area of interactiveAreas) {
+        if (area && isElementUnderMouse(area, e.clientX, e.clientY)) {
+          isOverInteractive = true;
+          break;
+        }
       }
     }
 
