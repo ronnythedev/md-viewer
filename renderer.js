@@ -55,6 +55,11 @@ document.addEventListener("DOMContentLoaded", () => {
       mouseY <= rect.bottom
     );
   }
+
+  // Listen for opacity changes from main process (keyboard shortcuts)
+  window.api.onOpacityChanged((newOpacity) => {
+    opacitySlider.value = newOpacity;
+  });
 });
 
 // Function to apply zoom

@@ -32,4 +32,6 @@ contextBridge.exposeInMainWorld("api", {
   closeApp: () => ipcRenderer.send("close-app"),
   setIgnoreMouseEvents: (ignore, options) =>
     ipcRenderer.send("set-ignore-mouse-events", ignore, options),
+  onOpacityChanged: (callback) =>
+    ipcRenderer.on("opacity-changed", (event, opacity) => callback(opacity)),
 });

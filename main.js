@@ -14,7 +14,7 @@ app.whenReady().then(() => {
   mainWindow = new BrowserWindow({
     width: 900,
     height: 900,
-    opacity: 1,
+    opacity: 0.5,
     alwaysOnTop: true,
     frame: true,
     // Exclude from screen capture/sharing
