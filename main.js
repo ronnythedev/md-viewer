@@ -12,7 +12,7 @@ app.whenReady().then(() => {
     alwaysOnTop: true,
     frame: true,
     // Exclude from screen capture/sharing
-    skipTaskbar: false, // Keep in taskbar
+    skipTaskbar: true, // Hide from taskbar/dock
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
