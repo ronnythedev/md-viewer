@@ -53,6 +53,7 @@ app.whenReady().then(() => {
 
 function registerMovementShortcuts() {
   const moveDistance = 50; // pixels to move each time
+  const opacityStep = 0.1; // opacity change per keystroke
 
   // Move left
   globalShortcut.register("CommandOrControl+Left", () => {
@@ -83,6 +84,30 @@ function registerMovementShortcuts() {
     if (mainWindow) {
       const [x, y] = mainWindow.getPosition();
       mainWindow.setPosition(x, y + moveDistance);
+    }
+  });
+
+  // Increase opacity (Cmd + Fn + Right)
+  globalShortcut.register("CommandOrControl+Option+Right", () => {
+    if (mainWindow) {
+      const currentOpacity = mainWindow.getOpacity();
+      const newOpacity = Math.min(1.0, currentOpacity + opacityStep);
+      mainWindow.setOpacity(newOpacity);
+
+      // Update the slider in the UI
+      mainWindow.webContents.send("opacity-changed", newOpacity);
+    }
+  });
+
+  // Decrease opacity (Cmd + Fn + Left)
+  globalShortcut.register("CommandOrControl+Option+Left", () => {
+    if (mainWindow) {
+      const currentOpacity = mainWindow.getOpacity();
+      const newOpacity = Math.max(0.1, currentOpacity - opacityStep);
+      mainWindow.setOpacity(newOpacity);
+
+      // Update the slider in the UI
+      mainWindow.webContents.send("opacity-changed", newOpacity);
     }
   });
 }

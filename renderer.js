@@ -45,6 +45,30 @@ document.addEventListener("DOMContentLoaded", () => {
     window.api.setIgnoreMouseEvents(!isOverInteractive, { forward: true });
   });
 
+  // Special handling for filter input - ensure it stays interactive when focused
+  const filterInput = document.getElementById("filterInput");
+
+  filterInput.addEventListener("focus", () => {
+    // When filter input gets focus, make sure mouse events are enabled
+    window.api.setIgnoreMouseEvents(false, { forward: true });
+  });
+
+  filterInput.addEventListener("blur", () => {
+    // When filter input loses focus, resume normal click-through behavior
+    // But only if mouse is not over an interactive area
+    const mouseEvent = new MouseEvent("mousemove", {
+      clientX: window.lastMouseX || 0,
+      clientY: window.lastMouseY || 0,
+    });
+    document.dispatchEvent(mouseEvent);
+  });
+
+  // Track last mouse position for blur event
+  document.addEventListener("mousemove", (e) => {
+    window.lastMouseX = e.clientX;
+    window.lastMouseY = e.clientY;
+  });
+
   // Helper function to check if mouse is over an element
   function isElementUnderMouse(element, mouseX, mouseY) {
     const rect = element.getBoundingClientRect();
